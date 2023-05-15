@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
-
+require("dotenv").config()
 
 
 const mongoDb = async () => {
-    await mongoose.connect("mongodb+srv://AshmitRanjan:Ashmit17@cloud.jcw7c9u.mongodb.net/FoodDelivery",{useNewUrlParser:true})
+    await mongoose.connect(process.env.Key,{useNewUrlParser:true})
     .then(async ()=>{
         const itemsDb = await mongoose.connection.db.collection("foodcollection");
         itemsDb.find({}).toArray()
