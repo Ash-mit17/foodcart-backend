@@ -15,7 +15,12 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req,res,next)=>{
-    res.setHeader("Access-Control-Allow-Origin","https://easyfood-yotx.onrender.com","http://localhost:3000");
+    const allowedOrigins = ['https://easyfood-yotx.onrender.com','http://localhost:3000'];
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    // res.setHeader("Access-Control-Allow-Origin","https://easyfood-yotx.onrender.com","http://localhost:3000");
     res.header(
         "Access-Control-Allow-Headers",
         "Origin,X-Requested-With,Content-Type,Accept"
