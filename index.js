@@ -1,26 +1,29 @@
-const router = require("./Routes/createuser")
-require("dotenv").config()
-const express = require('express')
-const bodyParser = require("body-parser")
-const mongoose = require('mongoose')
-mongoose.connect(process.env.Key,{useNewUrlParser:true})
-.then(()=>{
-    console.log("connected with mongodb");
-})
-.catch((err)=>{
-    console.log(err);
+import dotenv from 'dotenv';
+dotenv.config();
+import router from "./Routes/createuser.js";
+import express from 'express';
+import bodyParser from "body-parser";
+import connectDb from "./db/index.js";
+import mongoDb from './db/db.js';
+
+const port = process.env.PORT;
+
+connectDb()
+.then(async ()=>{
+    await mongoDb();
+    app.listen(port || 5000,()=>{
+        console.log(`Backend Server live on port ${port} `);
+    })
 })
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req,res,next)=>{
-    const allowedOrigins = ['https://easyfood-yotx.onrender.com','http://localhost:3000'];
     const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
+    if (process.env.allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
     }
-    // res.setHeader("Access-Control-Allow-Origin","https://easyfood-yotx.onrender.com","http://localhost:3000");
     res.header(
         "Access-Control-Allow-Headers",
         "Origin,X-Requested-With,Content-Type,Accept"
@@ -29,15 +32,11 @@ app.use((req,res,next)=>{
 })
 
 
-app.use(express.json())
+app.use(express.json({limit : "16kb"}));
 
 app.use("/",router);
 
 
 app.get("/",(req,res)=>{
     res.send("HI");
-})
-
-app.listen(5000,(req,res)=>{
-    console.log("Backend Server live on port 5000 yes");
 })

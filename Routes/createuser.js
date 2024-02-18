@@ -1,15 +1,12 @@
-const Order = require("../models/orders");
-const express = require('express');
+import Order from "../models/orders.js";
+import express from 'express';
 const router = express.Router();
-const bcrypt = require('bcryptjs')
-const jwt = require("jsonwebtoken");
-const { body, validationResult } = require('express-validator');
+import bcrypt from 'bcryptjs';
+import jwt from "jsonwebtoken";
+import { body, validationResult } from 'express-validator';
 const jwtSecret="earthholymothernaturesciencegrat"
-const dbdata = require("../db")
-dbdata();
 
-
-const userdb = require("../models/user");
+import User from "../models/user.js";
 
 router.post("/createuser",
     [body('email').isEmail(), body('name').isLength({min:5}),body('password','Invalid Password').isLength({ min: 5 })]
@@ -21,7 +18,7 @@ router.post("/createuser",
         const salt = await bcrypt.genSalt(10);
         const securepass = await bcrypt.hash(req.body.password,salt);
         try {
-            await userdb.create({
+            await User.create({
                 name: req.body.name,
                 password: securepass,
                 location: req.body.location,
@@ -44,7 +41,7 @@ router.post("/createuser",
         }
         let email=req.body.email;
         try{
-           let validuser = await userdb.findOne({email:email});
+           let validuser = await User.findOne({email:email});
            
            if(!validuser){
             return res.status(400).json({errors:"Try with a valid credentials email not found"})
@@ -69,7 +66,7 @@ router.post("/createuser",
         
     })
 
-router.post("/fooddata",async (req,res)=>{
+router.get("/fooddata",async (req,res)=>{
     try {
         var data=[];
         data.push(global.food_items);
@@ -135,4 +132,4 @@ router.post('/myOrderData', async (req, res) => {
 
 
 
-module.exports = router;
+export default router;

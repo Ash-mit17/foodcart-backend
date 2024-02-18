@@ -1,14 +1,12 @@
-const mongoose = require('mongoose')
-require("dotenv").config()
-
+import mongoose from 'mongoose';
 
 const mongoDb = async () => {
-    await mongoose.connect(process.env.Key,{useNewUrlParser:true})
+    await mongoose.connect(process.env.KEY,{useNewUrlParser:true})
     .then(async ()=>{
-        const itemsDb = await mongoose.connection.db.collection("foodcollection");
+        const itemsDb = mongoose.connection.db.collection("foodcollection");
         itemsDb.find({}).toArray()
         .then(async (foundItems)=>{
-            const foodCategory = await mongoose.connection.db.collection("foodcategory");
+            const foodCategory = mongoose.connection.db.collection("foodcategory");
             foodCategory.find({}).toArray()
             .then((foundCategory)=>{
                 global.food_items=foundItems;
@@ -25,4 +23,4 @@ const mongoDb = async () => {
    
 }
 
-module.exports = mongoDb;
+export default mongoDb;
