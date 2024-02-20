@@ -34,9 +34,8 @@ app.use((req,res,next)=>{
 
 app.use(express.json({limit : "16kb"}));
 
-app.use("/",router);
+import userRouter from './Routes/user.routes.js';
+import dataRouter from './Routes/data.routes.js';
 
-
-app.get("/",(req,res)=>{
-    res.send("HI");
-})
+app.use("/user",userRouter);
+app.use("/data",dataRouter);
