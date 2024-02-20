@@ -4,7 +4,6 @@ const router = express.Router();
 import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import { body, validationResult } from 'express-validator';
-const jwtSecret="earthholymothernaturesciencegrat"
 
 import User from "../models/user.js";
 
@@ -56,8 +55,10 @@ router.post("/createuser",
                 id:validuser._id
             }
            }
-           const authToken= jwt.sign(data,jwtSecret)
-           return res.json({success:true,authToken:authToken})
+           const authToken= jwt.sign(data,process.env.JWT_SECRET,{
+            expiresIn:process.env.ACCESS_TOKEN_EXPIRY
+           })
+           return res.json({success:true,username:validuser.name,authToken:authToken})
         }
 
         catch (error){
@@ -89,8 +90,6 @@ router.post('/orderData', async (req, res) => {
     console.log(eId)
     if (eId===null) {
         try {
-            console.log(data)
-            console.log("1231242343242354",req.body.email)
             await Order.create({
                 email: req.body.email,
                 order_data:[data]
