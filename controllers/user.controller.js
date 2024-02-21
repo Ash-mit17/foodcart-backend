@@ -41,7 +41,7 @@ const loginUser = asyncHandler(async (req, res) => {
     }
     const comparepass = await bcrypt.compare(password, validuser.password);
     if (!comparepass) {
-        throw new ApiError(400, "Try with a Valid credentials");
+        throw new ApiError(400, "Try with a valid credentials");
     }
     const data = {
         user: {

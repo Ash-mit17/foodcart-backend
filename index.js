@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import router from "./Routes/createuser.js";
 import express from 'express';
 import bodyParser from "body-parser";
 import connectDb from "./db/index.js";
@@ -39,3 +38,7 @@ import dataRouter from './Routes/data.routes.js';
 
 app.use("/user",userRouter);
 app.use("/data",dataRouter);
+
+app.use((err, req, res, next) => {
+    res.status(err.statusCode || 500).json({ status: 400, message: err.message } );
+});
